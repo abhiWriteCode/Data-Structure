@@ -40,10 +40,10 @@ class UndirectedGraph:
 			vertex = queue.pop(0)
 			print(vertex, end=' --> ')
 
-			for i in self.graph[vertex]:
-				if not visited[i]:
-					queue.append(i)
-					visited[i] = True
+			for v in self.graph[vertex]:
+				if not visited[v]:
+					queue.append(v)
+					visited[v] = True
 		print('')
 
 	def DFS(self, starting_vertex=0):
@@ -59,9 +59,9 @@ class UndirectedGraph:
 				print(vertex, end=' --> ')
 				visited[vertex] = True
 
-			for i in self.graph[vertex]:
-				if not visited[i]:
-					stack.append(i)
+			for v in self.graph[vertex]:
+				if not visited[v]:
+					stack.append(v)
 		print('')
 
 

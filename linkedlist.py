@@ -31,6 +31,8 @@ LinkedList:
 			node.next = self.__head
 			self.__head = node
 
+		return self
+
 	def insert_at_end(self, data):
 		node = Node(data)
 
@@ -40,6 +42,8 @@ LinkedList:
 		else:
 			self.__currentnode.next = node
 			self.__currentnode = node
+			
+		return self
 
 	def __search(self, data):
 		pointer = self.__head
@@ -59,6 +63,7 @@ LinkedList:
 	def delete_node(self, data):
 		if self.__head == None:
 			print('You did not added any value')
+			return
 
 		if self.__head == self.__currentnode: # if one node exists
 			self.__head = None
@@ -77,6 +82,8 @@ LinkedList:
 
 		prev_node.next = search_node.next # else
 		del search_node
+			
+		return self
 
 	def is_contain(self, data):
 		pointer = self.__head
@@ -87,7 +94,7 @@ LinkedList:
 			pointer = pointer.next
 		print('LinkedList does not contains %s'%data) 
 
-	def printlist(self):
+	def print_list(self):
 		pointer = self.__head
 		while pointer:
 			print(pointer.data, end=' ')
@@ -104,6 +111,8 @@ LinkedList:
 
 	def reverse(self):
 		self.__rev(self.__head).next = None # assign last node to None to break loop
+			
+		return self
 
 	def print_head(self):
 		print('head:', self.__head.data)
@@ -127,18 +136,18 @@ def main():
 	l_list.insert_at_beginning(333)
 	l_list.insert_at_beginning(444)
 	l_list.print_head()
-	l_list.printlist()
+	l_list.print_list()
 
 	l_list.reverse()
 	l_list.print_head()
-	l_list.printlist()
+	l_list.print_list()
 
 	# l_list.delete_node(44)
 	# l_list.delete_node(444)
 	# l_list.delete_node(22)
 	# l_list.delete_node(4)
 
-	# l_list.printlist()
+	# l_list.print_list()
 	# l_list.is_contain(10)
 	# l_list.is_contain(11)
 
