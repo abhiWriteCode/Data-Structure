@@ -3,6 +3,9 @@ class Node:
 		self.data = data
 		self.next = None
 
+	def __repr__(self):
+		return 'Node(data={})'.format(self.data)
+
 class LinkedList:
 	"""
 LinkedList:
@@ -15,7 +18,7 @@ LinkedList:
 		2) insert_at_end(data)
 		3) delete_node(data)
 		4) is_contain(data)
-		5) printlist()
+		5) __repr__()
 	"""
 	def __init__(self):
 		self.__head = None
@@ -94,25 +97,34 @@ LinkedList:
 			pointer = pointer.next
 		print('LinkedList does not contains %s'%data) 
 
-	def print_list(self):
-		pointer = self.__head
-		while pointer:
-			print(pointer.data, end=' ')
-			pointer = pointer.next
-		print()
-
-	def __rev(self, node):
-		if node.next is None:
-			self.__head = node
-			return self.__head
-		curr_node = self.__rev(node.next)
-		curr_node.next = node
-		return node
-
 	def reverse(self):
-		self.__rev(self.__head).next = None # assign last node to None to break loop
-			
+		if self.__head is None:
+			return
+
+		self.__currentnode = self.__head
+		currentnode = self.__head
+		nextnode = currentnode.next
+		currentnode.next = None
+
+		while nextnode is not None:
+			third_node = nextnode.next
+			nextnode.next = currentnode
+			currentnode = nextnode
+			nextnode = third_node
+
+		self.__head = currentnode
+
 		return self
+
+	def __repr__(self):
+		pointer = self.__head
+		data_list = []
+		
+		while pointer:
+			data_list.append(pointer.data)
+			pointer = pointer.next
+
+		return f"LinkedList({data_list})"
 
 	def print_head(self):
 		print('head:', self.__head.data)
@@ -136,20 +148,20 @@ def main():
 	l_list.insert_at_beginning(333)
 	l_list.insert_at_beginning(444)
 	l_list.print_head()
-	l_list.print_list()
+	print(l_list)
 
 	l_list.reverse()
 	l_list.print_head()
-	l_list.print_list()
+	print(l_list)
 
-	# l_list.delete_node(44)
-	# l_list.delete_node(444)
-	# l_list.delete_node(22)
-	# l_list.delete_node(4)
+	l_list.delete_node(44)
+	l_list.delete_node(444)
+	l_list.delete_node(22)
+	l_list.delete_node(4)
 
-	# l_list.print_list()
-	# l_list.is_contain(10)
-	# l_list.is_contain(11)
+	print(l_list)
+	l_list.is_contain(10)
+	l_list.is_contain(11)
 
 if __name__ == '__main__':
 	main()
