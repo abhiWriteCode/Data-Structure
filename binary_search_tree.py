@@ -103,6 +103,15 @@ class Tree(object):
         self._postorder(node.right)
         print(node.data, end=' ')
 
+    def _levelorder_util(self, node, dist, dd):
+        if node is None:
+            return node
+
+        dd[dist].append(node.data)
+
+        self._levelorder_util(node.left, dist+1, dd)
+        self._levelorder_util(node.right, dist+1, dd)
+
     def _total_nodes(self, node):
         if node is None:
             return 0
@@ -228,15 +237,6 @@ class BST(Tree):
                 queue.append(node.right)
 
         print()
-
-    def _levelorder_util(self, node, dist, dd):
-        if node is None:
-            return node
-
-        dd[dist].append(node.data)
-
-        self._levelorder_util(node.left, dist+1, dd)
-        self._levelorder_util(node.right, dist+1, dd)
 
     def BFS_v2(self):
         dd = defaultdict(list)
