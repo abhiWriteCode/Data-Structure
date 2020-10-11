@@ -1,15 +1,15 @@
-
-class UndirectedGraph:
+class UndirectedGraph(object):
 
     def __init__(self, total_verticies=None):
-        super().__init__()
         if total_verticies is None:
             raise ValueError('Initialize total number of verticies')
+
         self.total_verticies = total_verticies
         self.graph = {vertex: [] for vertex in range(total_verticies)}
 
     def _valid_input(self, verticies):
         max_vertex = max(verticies)
+
         if max_vertex >= self.total_verticies:
             return False
         return True  # Else
@@ -34,8 +34,8 @@ class UndirectedGraph:
         visited = [False] * self.total_verticies
         queue = []
 
-        visited[starting_vertex] = True
         queue.append(starting_vertex)
+        visited[starting_vertex] = True
 
         while len(queue):
             vertex = queue.pop(0)
