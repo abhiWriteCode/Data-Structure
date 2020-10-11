@@ -1,4 +1,7 @@
-class Tree:
+from collections import defaultdict, deque
+
+
+class Tree(object):
     def __init__(self):
         pass
 
@@ -30,6 +33,7 @@ class Tree:
         if node is None:
             print('The tree does not contains %s' % data)
             return node
+
         if node.data > data:
             node.left = self._delete_node(node.left, data)
         elif node.data < data:
@@ -46,8 +50,8 @@ class Tree:
 
             left_subtree_largest_value = self._find_largest_node(node.left)
             node.data = left_subtree_largest_value.data
-            node.left = self._delete_node(
-                node.left, left_subtree_largest_value.data)
+            node.left = self._delete_node(node.left,
+                                          left_subtree_largest_value.data)
         return node
 
     def _find_largest_node(self, node):
@@ -69,34 +73,14 @@ class Tree:
             return node
 
     def _height(self, node):
-        height = 0
         if node is None:
-            return height
+            return 0
 
         left_subtree_height = self._height(node.left)
         right_subtree_height = self._height(node.right)
 
         height = max(left_subtree_height, right_subtree_height) + 1
         return height
-
-    def _maxwidth(self, node):
-        from collections import deque
-        queue = deque()
-        maxwidth = 0
-        queue.appendleft(node)  # PUSH
-
-        while len(queue) != 0:
-            this_level_width = len(queue)
-            maxwidth = max(maxwidth, this_level_width)
-
-            while this_level_width != 0:
-                this_level_width -= 1
-                temp_node = queue.pop()  # POP
-                if temp_node.left is not None:
-                    queue.appendleft(temp_node.left)  # PUSH
-                if temp_node.right is not None:
-                    queue.appendleft(temp_node.right)  # PUSH
-        return maxwidth
 
     def _preorder(self, node):
         if node is None:
@@ -166,7 +150,27 @@ class BST(Tree):
     def determine_maxwidth(self):
         if self.root is None:
             return 0
-        return super()._maxwidth(self.root)
+
+        from collections import deque
+        queue = deque()
+        maxwidth = 0
+        queue.appendleft(self.root)  # PUSH
+
+        while len(queue) != 0:
+            this_level_width = len(queue)
+            maxwidth = max(maxwidth, this_level_width)
+
+            while this_level_width != 0:
+                this_level_width -= 1
+                temp_node = queue.pop()  # POP
+                if temp_node.left is not None:
+                    queue.appendleft(temp_node.left)  # PUSH
+                if temp_node.right is not None:
+                    queue.appendleft(temp_node.right)  # PUSH
+        return maxwidth
+        
+    def total_node(self):
+        return super()._total_nodes(self.root)
 
     def preorder_traversal(self):
         if self.root is None:
@@ -182,6 +186,24 @@ class BST(Tree):
         super()._inorder(self.root)
         print()
 
+    def inorder_loop(self):
+        if self.root is None:
+            return
+
+        stack = []
+        node = self.root
+
+        while True:
+            if node is not None:
+                stack.append(node)
+                node = node.left
+            elif len(stack) > 0:
+                node = stack.pop(-1)
+                print(node.data, end=' ')
+                node = node.right
+            else:
+                break
+
     def postorder_traversal(self):
         if self.root is None:
             print('Tree is Empty')
@@ -189,25 +211,41 @@ class BST(Tree):
         super()._postorder(self.root)
         print()
 
-    def total_node(self):
-        return super()._total_nodes(self.root)
-
-    def BFS(self):  # Level order tree traversal ==> Breadth first search
+    def BFS_v1(self):  # Level order tree traversal ==> Breadth first search
         if self.root is None:
             print('Tree is Empty')
             return
         queue = []
         queue.append(self.root)
 
-        while len(queue) != 0:
+        while len(queue):
             node = queue.pop(0)
             print(node.data, end=' ')
+
             if node.left is not None:
                 queue.append(node.left)
             if node.right is not None:
                 queue.append(node.right)
 
         print()
+
+    def _levelorder_util(self, node, dist, dd):
+        if node is None:
+            return node
+
+        dd[dist].append(node.data)
+
+        self._levelorder_util(node.left, dist+1, dd)
+        self._levelorder_util(node.right, dist+1, dd)
+
+    def BFS_v2(self):
+        dd = defaultdict(list)
+
+        self._levelorder_util(self.root, 0, dd)
+
+        print('\nLevel order')
+        for k, v in dd.items():
+            print(k, v)
 
 
 def main():
@@ -230,7 +268,7 @@ def main():
     # print(len(l))
     # for i in l:
     # 	tree.insert(i)
-
+    
     print('preorder traversal:', end=' ')
     tree.preorder_traversal()
     print('inorder traversal:', end=' ')
@@ -238,7 +276,7 @@ def main():
     print('postorder traversal:', end=' ')
     tree.postorder_traversal()
     print('breadth first traversal:', end=' ')
-    tree.BFS()
+    tree.BFS_v1()
 
     print('Largest Value:', tree.find_largest_value())
     print('Max Width:', tree.determine_maxwidth())
@@ -247,7 +285,7 @@ def main():
     tree.delete_node(20)
 
     print('breadth first traversal:', end=' ')
-    tree.BFS()
+    tree.BFS_v2()
     print('Max Width:', tree.determine_maxwidth())
 
     tree.search_node(5)
@@ -265,7 +303,7 @@ def main():
     tree.insert(1)
     tree.insert(15)
     print('breadth first traversal:', end=' ')
-    tree.BFS()
+    tree.BFS_v2()
 
 
 if __name__ == '__main__':
